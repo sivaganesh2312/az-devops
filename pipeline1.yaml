@@ -1,0 +1,24 @@
+---
+trigger:
+  - main
+stages:
+  - stage: build
+    displayName: Build stage
+    pool:
+      name: Default
+    jobs:
+      - job: Maven
+        displayName: build using Maven
+        steps:
+          - task: Maven@4
+            inputs:
+              mavenPOMFile: 'pom.xml'
+              goals: package     
+          - task: CopyFiles@2
+            inputs:
+              contents: 'target/spring-petclinic-3.3.0-SNAPSHOT.jar'
+              targetFolder: $(Build.ArtifactStagingDirectory)
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)
+              artifactName: MyBuildOutputs  
